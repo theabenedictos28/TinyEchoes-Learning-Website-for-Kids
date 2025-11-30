@@ -154,7 +154,7 @@ letterDiv.innerHTML = `<img src="images/${currentLetter.toLowerCase()}.png" alt=
     // Initialize game
     function startGame() {
       currentLetter = getRandomLetter();
-      letterDiv.innerHTML = `<img src="images/${currentLetter}.png" alt="${currentLetter}" style="width: 150px; height: 150px;">`; // Display image of current letter
+letterDiv.innerHTML = `<img src="images/${currentLetter.toLowerCase()}.png" alt="${currentLetter}" style="width: 150px; height: 150px;">`;
       displayLetterButtons();
 
       // Add click event to the letter image to play sound and zoom effect
