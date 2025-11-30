@@ -81,7 +81,7 @@
   <a href="choose.html" id="back-arrow">←</a>
 
   <div id="letter">
-    <img id="image" src="images/A.png" alt="Letter A" />
+<img id="image" src="images/a.png" alt="Letter A" />
   </div>    
 
  <!-- Play button in bottom-right corner with href -->
@@ -113,7 +113,7 @@
 
           const newLetter = alphabet[currentIndex];
           // Update image for the new letter
-          imageDiv.src = `images/${newLetter}.png`;
+imageDiv.src = `images/${newLetter.toLowerCase()}.png`;
           imageDiv.alt = `Letter ${newLetter}`;
           
           // Display the new image
