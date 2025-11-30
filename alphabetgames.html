@@ -134,7 +134,7 @@
         // Proceed to the next round after 1 second if correct
         setTimeout(() => {
           currentLetter = getRandomLetter();
-          letterDiv.innerHTML = `<img src="images/${currentLetter}.png" alt="${currentLetter}" style="width: 150px; height: 150px;">`; // Show image of current letter
+letterDiv.innerHTML = `<img src="images/${currentLetter.toLowerCase()}.png" alt="${currentLetter}" style="width: 150px; height: 150px;">`;
           displayLetterButtons();
         }, 1000);
       } else {
