@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alphabet Games</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('images/alpha_bg.png');
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      flex-direction: column;
+      position: relative;
+    }
+
+    #back-arrow {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 50px;
+      color: black;
+      cursor: pointer;
+      z-index: 10;
+      text-decoration: none;
+    }
+
+    #back-arrow:hover {
+      color: white;
+    }
+
+    #letter {
+      margin-bottom: 20px;
+      transition: transform 0.3s; /* Add transition for zoom effect */
+    }
+
+    .letter-button {
+      font-size: 30px;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: transform 0.3s;
+    }
+
+    .letter-button:hover {
+      transform: scale(1.1);
+    }
+
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: white;
+      transition: transform 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <a href="alphabets.html" id="back-arrow">←</a>
+
+  <!-- Display the current letter as an image -->
+  <div id="letter"></div>
+
+  <!-- Letter buttons -->
+  <div id="letters-container"></div>
+
+  <!-- Result message -->
+  <div id="result"></div>
+
+  <script>
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let currentLetter = '';
+    const resultDiv = document.getElementById('result');
+    const letterDiv = document.getElementById('letter');
+    const lettersContainer = document.getElementById('letters-container');
+
+    function getRandomLetter() {
+      const randomIndex = Math.floor(Math.random() * alphabet.length);
+      return alphabet[randomIndex];
+    }
+
+    function getFiveLettersIncludingCorrect() {
+      let letters = [];
+      const correctLetter = currentLetter;
+      letters.push(correctLetter);
+
+      // Add 4 more random letters that are not the correct letter
+      while (letters.length < 5) {
+        const randomLetter = getRandomLetter();
+        if (!letters.includes(randomLetter)) {
+          letters.push(randomLetter);
+        }
+      }
+
+      // Shuffle the letters array
+      return letters.sort(() => Math.random() - 0.5);
+    }
+
+    function displayLetterButtons() {
+      lettersContainer.innerHTML = ''; // Clear previous buttons
+      const fiveLetters = getFiveLettersIncludingCorrect();
+      fiveLetters.forEach(letter => {
+        const button = document.createElement('button');
+        button.classList.add('letter-button');
+        button.textContent = letter;
+        button.addEventListener('click', () => checkAnswer(button, letter));
+        lettersContainer.appendChild(button);
+      });
+    }
+
+    function playLetterSound(letter) {
+      const audio = new Audio(`sounds/${letter.toLowerCase()}.mp3`);
+      audio.play();
+    }
+
+    function checkAnswer(button, selectedLetter) {
+      // Reset the result message before checking
+      resultDiv.textContent = '';
+
+      if (selectedLetter === currentLetter) {
+        resultDiv.textContent = 'Correct! 🎉';
+        resultDiv.style.color = 'green';
+
+        // Play sound for the current letter
+        playLetterSound(currentLetter);
+
+        // Proceed to the next round after 1 second if correct
+        setTimeout(() => {
+          currentLetter = getRandomLetter();
+          letterDiv.innerHTML = `<img src="images/${currentLetter}.png" alt="${currentLetter}" style="width: 150px; height: 150px;">`; // Show image of current letter
+          displayLetterButtons();
+        }, 1000);
+      } else {
+        // Show "Try Again" with zoom effect on wrong answer
+        resultDiv.textContent = 'Try Again! ❌';
+        resultDiv.style.color = 'red';
+        resultDiv.style.transform = 'scale(1.5)'; // Zoom in the message
+        resultDiv.style.transition = 'transform 0.3s'; // Smooth zoom transition
+
+        // After zoom effect, reset the scale
+        setTimeout(() => {
+          resultDiv.style.transform = 'scale(1)';
+        }, 300);
+      }
+    }
+
+    // Initialize game
+    function startGame() {
+      currentLetter = getRandomLetter();
+      letterDiv.innerHTML = `<img src="images/${currentLetter}.png" alt="${currentLetter}" style="width: 150px; height: 150px;">`; // Display image of current letter
+      displayLetterButtons();
+
+      // Add click event to the letter image to play sound and zoom effect
+      letterDiv.addEventListener('click', () => {
+        playLetterSound(currentLetter); // Play sound for the current letter
+        letterDiv.style.transform = 'scale(1.2)'; // Zoom in the letter image
+        setTimeout(() => {
+          letterDiv.style.transform = 'scale(1)'; // Reset zoom after a short delay
+        }, 300);
+      });
+    }
+
+    // Start the game on page load
+    window.onload = startGame;
+  </script>
+</body>
+</html>

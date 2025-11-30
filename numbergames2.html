@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Math Quiz Game</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('images/alpha_bg.png');
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      flex-direction: column;
+      position: relative;
+    }
+
+    #back-arrow {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 50px;
+      color: black;
+      cursor: pointer;
+      z-index: 10;
+      text-decoration: none;
+    }
+
+    #back-arrow:hover {
+      color: white;
+    }
+
+    #question {
+      margin-bottom: 20px;
+    }
+
+    .answer-button {
+      font-size: 20px;
+      padding: 10px 15px;
+      margin: 5px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: transform 0.3s;
+    }
+
+    .answer-button:hover {
+      transform: scale(1.1);
+    }
+
+    #result {
+      font-size: 24px;
+      margin-top: 20px;
+      transition: transform 0.3s; /* Smooth transition for zoom effect */
+    }
+  </style>
+</head>
+<body>
+  <a href="choosenumber.html" id="back-arrow">←</a>
+
+  <div id="question"></div>
+  <div id="answers-container"></div>
+  <div id="result"></div>
+
+  <script>
+    let correctAnswer = 0;
+    const questionDiv = document.getElementById('question');
+    const answersContainer = document.getElementById('answers-container');
+    const resultDiv = document.getElementById('result');
+
+    function generateQuestion() {
+      const num1 = Math.floor(Math.random() * 10) + 1;
+      const num2 = Math.floor(Math.random() * 10) + 1;
+      const operations = ['+', '-', 'x']; // Use 'x' for multiplication
+      const operation = operations[Math.floor(Math.random() * operations.length)]; // Randomly select an operation
+
+      // Calculate the correct answer based on the operation
+      if (operation === '+') {
+        correctAnswer = num1 + num2;
+      } else if (operation === '-') {
+        // Ensure num1 is greater than or equal to num2 for subtraction
+        if (num1 < num2) {
+          correctAnswer = num2 - num1; // Swap to avoid negative result
+        } else {
+          correctAnswer = num1 - num2;
+        }
+      } else if (operation === 'x') {
+        correctAnswer = num1 * num2;
+      }
+
+      // Display the question as images or text
+      questionDiv.innerHTML = `
+        <img src="images/${num1}.png" alt="${num1}" style="width: 100px; height: 100px;" onclick="playSoundAndZoom(${num1})">
+        <span style="font-size: 50px;">${operation}</span>
+        <img src="images/${num2}.png" alt="${num2}" style="width: 100px; height: 100px;" onclick="playSoundAndZoom(${num2})">
+      `;
+
+      displayAnswerOptions(correctAnswer);
+      resultDiv.textContent = ''; // Clear the result message when generating a new question
+    }
+
+    function displayAnswerOptions(correct) {
+      answersContainer.innerHTML = ''; // Clear previous answers
+      const options = new Set([correct]); // Use a Set to avoid duplicates
+
+      // Generate 3 random wrong answers
+      while (options.size < 4) {
+        const wrongAnswer = Math.floor(Math.random() * 20) + 1; // Random number between 1 and 20
+        if (wrongAnswer !== correct) { // Ensure the wrong answer is not the correct answer
+          options.add(wrongAnswer);
+        }
+      }
+
+      // Convert Set to Array and shuffle
+      const shuffledOptions = Array.from(options).sort(() => Math.random() - 0.5);
+      shuffledOptions.forEach(answer => {
+        const button = document.createElement('button');
+        button.classList.add('answer-button');
+        button.textContent = answer;
+        button.addEventListener('click', () => checkAnswer(answer));
+        answersContainer.appendChild(button);
+      });
+    }
+
+    function checkAnswer(selected) {
+      if (selected === correctAnswer) {
+        resultDiv.textContent = 'Correct! 🎉';
+        resultDiv.style.color = 'green';
+        setTimeout(() => {
+          generateQuestion(); // Generate a new question after 2 seconds
+        }, 2000);
+      } else {
+        resultDiv.textContent = 'Wrong! ❌';
+        resultDiv.style.color = 'red';
+        zoomEffect(resultDiv); // Apply zoom effect on wrong answer
+        // Note: The game will not restrict attempts; players can keep trying.
+      }
+    }
+
+    function zoomEffect(element) {
+      element.style.transform = 'scale(1.5)'; // Zoom in
+      element.style.transition = 'transform 0.3s'; // Smooth transition
+      setTimeout(() => {
+        element.style.transform = 'scale(1)'; // Zoom out
+      }, 300); // Duration of zoom in
+    }
+
+    // Function to play sound and zoom effect on number image click
+    function playSoundAndZoom(num) {
+      const audio = new Audio(`sounds/${num}.mp3`); // Assuming sound files are named after the numbers
+      audio.play();
+
+      // Zoom effect on the number image
+      const images = questionDiv.getElementsByTagName('img');
+      for (let img of images) {
+        if (img.alt == num) {
+          img.style.transform = 'scale(1.2)'; // Zoom in
+          setTimeout(() => {
+            img.style.transform = 'scale(1)'; // Reset zoom
+          }, 300);
+        }
+      }
+    }
+
+    // Start the game on page load
+    window.onload = generateQuestion;
+  </script>
+</body>
+</html>

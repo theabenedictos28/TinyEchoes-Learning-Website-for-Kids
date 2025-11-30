@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Alphabet</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('images/alpha_bg.png');
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      flex-direction: column;
+      position: relative;
+    }
+
+    #letter {
+      font-size: 120px;
+      font-weight: bold;
+      color: #fff;
+      cursor: pointer;
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+      user-select: none;
+      transition: transform 0.3s;
+    }
+
+    #letter:hover {
+      transform: scale(1.1);
+    }
+
+    #image {
+      width: 150px;
+      height: 150px;
+      margin-top: 20px;
+      transition: transform 0.3s;
+    }
+
+    #image:hover {
+      transform: scale(1.1);
+    }
+
+    #back-arrow {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 50px;
+      color: black;
+      cursor: pointer;
+      z-index: 10;
+      text-decoration: none;
+    }
+
+    #back-arrow:hover {
+      color: white;
+    }
+
+    /* Style for Play button */
+    #play-button {
+      position: absolute;
+      bottom: 100px;
+      right: 50px;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    #play-button:hover {
+      background-color: #218838;
+    }
+
+  </style>
+</head>
+<body>
+  <a href="choose.html" id="back-arrow">←</a>
+
+  <div id="letter">
+    <img id="image" src="images/A.png" alt="Letter A" />
+  </div>    
+
+ <!-- Play button in bottom-right corner with href -->
+  <a href="alphabetgames.html">
+    <button id="play-button">Play</button>
+  </a>
+  <script>
+      const letterDiv = document.getElementById('letter');
+      const imageDiv = document.getElementById('image');
+      const playButton = document.getElementById('play-button');
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      let currentIndex = 0;
+
+      function playLetterSound(letter) {
+        const audio = new Audio(`sounds/${letter.toLowerCase()}.mp3`);
+        audio.play();
+      }
+
+      letterDiv.addEventListener('click', () => {
+        const currentLetter = alphabet[currentIndex];
+        playLetterSound(currentLetter);
+
+        // Hide the current image
+        imageDiv.style.display = 'none';
+
+        setTimeout(() => {
+          // Move to the next letter and loop back to A after Z
+          currentIndex = (currentIndex + 1) % alphabet.length;
+
+          const newLetter = alphabet[currentIndex];
+          // Update image for the new letter
+          imageDiv.src = `images/${newLetter}.png`;
+          imageDiv.alt = `Letter ${newLetter}`;
+          
+          // Display the new image
+          imageDiv.style.display = 'block';
+        }, 500);
+      });
+
+      // Play button functionality
+      playButton.addEventListener('click', () => {
+        const currentLetter = alphabet[currentIndex];
+        playLetterSound(currentLetter);
+      });
+  </script>
+</body>
+</html>

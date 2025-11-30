@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, content-scale=1.0"/>
+  <title>Animal Game</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('images/alpha_bg.png');
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      flex-direction: column;
+      position: relative;
+    }
+
+    #back-arrow {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 50px;
+      color: black;
+      cursor: pointer;
+      z-index: 10;
+      text-decoration: none;
+    }
+
+    #back-arrow:hover {
+      color: white;
+    }
+
+    #animal {
+      margin-bottom: 20px;
+      transition: transform 0.3s; /* Add transition for zoom effect */
+      cursor: pointer; /* Change cursor to pointer for the image */
+    }
+
+    .animal-button {
+      font-size: 30px;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: transform 0.3s;
+    }
+
+    .animal-button:hover {
+      transform: scale(1.1);
+    }
+
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: white;
+      transition: transform 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <a href="animals.html" id="back-arrow">←</a>
+
+  <!-- Display the current animal as an image -->
+  <div id="animal"></div>
+
+  <!-- Animal buttons -->
+  <div id="animals-container"></div>
+
+  <!-- Result message -->
+  <div id="result"></div>
+
+  <script>
+    const animals = ['cat', 'dog', 'elephant', 'lion', 'cow', 'horse', 'sheep', 'frog', 'duck', 'bird', 'hen', 'bee', 'snake', 'pig', 'whale',];
+    let currentAnimal = '';
+    const resultDiv = document.getElementById('result');
+    const animalDiv = document.getElementById('animal');
+    const animalsContainer = document.getElementById('animals-container');
+
+    function getRandomAnimal() {
+      const randomIndex = Math.floor(Math.random() * animals.length);
+      return animals[randomIndex];
+    }
+
+    function getFiveAnimalsIncludingCorrect() {
+      let animalList = [];
+      const correctAnimal = currentAnimal;
+      animalList.push(correctAnimal);
+
+      // Add 4 more random animals that are not the correct animal
+      while (animalList.length < 5) {
+        const randomAnimal = getRandomAnimal();
+        if (!animalList.includes(randomAnimal)) {
+          animalList.push(randomAnimal);
+        }
+      }
+
+      // Shuffle the animal array
+      return animalList.sort(() => Math.random() - 0.5);
+    }
+
+    function displayAnimalButtons() {
+      animalsContainer.innerHTML = ''; // Clear previous buttons
+      const fiveAnimals = getFiveAnimalsIncludingCorrect();
+      fiveAnimals.forEach(animal => {
+        const button = document.createElement('button');
+        button.classList.add('animal-button');
+        button.textContent = animal;
+        button.addEventListener('click', () => checkAnswer(button, animal));
+        animalsContainer.appendChild(button);
+      });
+    }
+
+    function checkAnswer(button, selectedAnimal) {
+      // Reset the result message before checking
+      resultDiv.textContent = '';
+
+      if (selectedAnimal === currentAnimal) {
+        resultDiv.textContent = 'Correct! 🎉';
+        resultDiv.style.color = 'green';
+
+        // Proceed to the next round after 1 second if correct
+        setTimeout(() => {
+          currentAnimal = getRandomAnimal();
+          animalDiv.innerHTML = `<img src="images/${currentAnimal}.png" alt="${currentAnimal}" style="width: 150px; height: 150px;">`; // Show image of current animal
+          displayAnimalButtons();
+        }, 1000);
+      } else {
+        // Show "Try Again" with zoom effect on wrong answer
+        resultDiv.textContent = 'Try Again! ❌';
+        resultDiv.style.color = 'red';
+        resultDiv.style.transform = 'scale(1.5)'; // Zoom in the message
+        resultDiv.style.transition = 'transform 0.3s'; // Smooth zoom transition
+
+        // After zoom effect, reset the scale
+        setTimeout(() => {
+          resultDiv.style.transform = 'scale(1)';
+        }, 300);
+      }
+    }
+
+    // Function to play sound and zoom effect on animal image click
+    function playSoundAndZoom() {
+      const audio = new Audio(`sounds/${currentAnimal}.mp3`); // Assuming sound files are named after the animals
+      audio.play();
+
+      // Zoom effect on the animal image
+      animalDiv.style.transform = 'scale(1.2)'; // Zoom in
+      setTimeout(() => {
+        animalDiv.style.transform = 'scale(1)'; // Reset zoom
+      }, 300);
+    }
+
+    // Initialize game
+    function startGame() {
+      currentAnimal = getRandomAnimal();
+      animalDiv.innerHTML = `<img src="images/${currentAnimal}.png" alt="${currentAnimal}" style="width: 150px; height: 150px;">`; // Display image of current animal
+
+      // Add click event to the animal image
+      animalDiv.addEventListener('click', playSoundAndZoom);
+
+      displayAnimalButtons();
+    }
+
+    // Start the game on page load
+    window.onload = startGame;
+  </script>
+</body>
+</html>

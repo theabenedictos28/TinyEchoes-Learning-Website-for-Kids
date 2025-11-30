@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Sections</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-image: url('images/choose.png'); 
+            background-size: cover;    
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .section {
+            text-align: center;
+            color: black;
+        }
+
+        .icon {
+            width: 100px;
+            height: 100px;
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+          #back-arrow {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 50px;
+      color: white;
+      cursor: pointer;
+      z-index: 10;
+      text-decoration: none;
+    }
+
+    #back-arrow:hover {
+      color: black;
+    }
+    a {
+        text-decoration: none; /* Remove underline from anchor tags */
+        }
+
+    p {
+        margin: 0; /* Optional: Remove default margin from <p> */
+        font-weight: bold;
+        color: black;
+        margin-top: 10px;
+    }
+
+    </style>
+</head>
+<body>
+      <a href="index.html" id="back-arrow">←</a>
+    <div class="container">
+        <div class="section">
+            <a href="alphabets.html">
+                <img src="images/alphabets.png" alt="Alphabets Icon" class="icon">
+                <p>Alphabets</p>
+            </a>
+        </div>
+        <div class="section">
+            <a href="numbers.html">
+                <img src="images/numbers.png" alt="Numbers Icon" class="icon">
+                <p>Numbers</p>
+            </a>
+        </div>
+        <div class="section">
+            <a href="animals.html">
+                <img src="images/animals.png" alt="Animals Icon" class="icon">
+                <p>Animals</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Number Game with Images</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-image: url('images/alpha_bg.png');
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      flex-direction: column;
+      position: relative;
+    }
+
+    #back-arrow {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 50px;
+      color: black;
+      cursor: pointer;
+      z-index: 10;
+      text-decoration: none;
+    }
+
+    #back-arrow:hover {
+      color: white;
+    }
+
+    #number {
+      margin-bottom: 20px;
+      font-size: 50px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .number-button {
+      font-size: 30px;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: transform 0.3s;
+    }
+
+    .number-button:hover {
+      transform: scale(1.1);
+    }
+
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: white;
+      transition: transform 0.3s;
+    }
+
+    /* Zoom effect for the image */
+    .zoom {
+      transform: scale(1.5);
+      transition: transform 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <a href="choosenumber.html" id="back-arrow">←</a>
+
+  <!-- Display the current number as an image -->
+  <div id="number"></div>
+
+  <!-- Number buttons -->
+  <div id="numbers-container"></div>
+
+  <!-- Result message -->
+  <div id="result"></div>
+
+  <script>
+    const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    let currentNumber = 0;
+    const resultDiv = document.getElementById('result');
+    const numberDiv = document.getElementById('number');
+    const numbersContainer = document.getElementById('numbers-container');
+
+    function getRandomNumber() {
+      const randomIndex = Math.floor(Math.random() * numbers.length);
+      return numbers[randomIndex];
+    }
+
+    function getFiveNumbersIncludingCorrect() {
+      let numberArray = [];
+      const correctNumber = currentNumber;
+      numberArray.push(correctNumber);
+
+      // Add 4 more random numbers that are not the correct number
+      while (numberArray.length < 5) {
+        const randomNumber = getRandomNumber();
+        if (!numberArray.includes(randomNumber)) {
+          numberArray.push(randomNumber);
+        }
+      }
+
+      // Shuffle the number array
+      return numberArray.sort(() => Math.random() - 0.5);
+    }
+
+    function displayNumberButtons() {
+      numbersContainer.innerHTML = ''; // Clear previous buttons
+      const fiveNumbers = getFiveNumbersIncludingCorrect();
+      fiveNumbers.forEach(number => {
+        const button = document.createElement('button');
+        button.classList.add('number-button');
+        button.textContent = number;
+        button.addEventListener('click', () => checkAnswer(button, number));
+        numbersContainer.appendChild(button);
+      });
+    }
+
+    function playSound(number) {
+      const audio = new Audio(`sounds/${number}.mp3`); // Adjust the path as necessary
+      audio.play();
+    }
+
+    function zoomImage(imageElement) {
+      imageElement.classList.add('zoom');
+      setTimeout(() => {
+        imageElement.classList.remove('zoom');
+      }, 300); // Duration of the zoom effect
+    }
+
+    function checkAnswer(button, selectedNumber) {
+      // Reset the result message before checking
+      resultDiv.textContent = '';
+
+      if (selectedNumber === currentNumber) {
+        resultDiv.textContent = 'Correct! 🎉';
+        resultDiv.style.color = 'green';
+
+        // Proceed to the next round after 1 second if correct
+        setTimeout(() => {
+          currentNumber = getRandomNumber();
+          const newImage = `<img src="images/${currentNumber}.png" alt="${currentNumber}" style="width: 100px; height: 100px;" onclick="handleImageClick(this, ${currentNumber})">`;
+          numberDiv.innerHTML = newImage; // Show image of current number
+          displayNumberButtons();
+        }, 1000);  // Ensure it waits until after confetti is shown
+      } else {
+        // Show "Try Again" with zoom effect on wrong answer
+        resultDiv.textContent = 'Try Again! ❌';
+        resultDiv.style.color = 'red';
+        resultDiv.style.transform = 'scale(1.5)'; // Zoom in the message
+        resultDiv.style.transition = 'transform 0.3s'; // Smooth zoom transition
+
+        // After zoom effect, reset the scale
+        setTimeout(() => {
+          resultDiv.style.transform = 'scale(1)';
+        }, 300);
+      }
+    }
+
+    function handleImageClick(imageElement, number) {
+      playSound(number);
+      zoomImage(imageElement);
+    }
+
+    // Initialize game
+    function startGame() {
+      currentNumber = getRandomNumber();
+      const initialImage = `<img src="images/${currentNumber}.png" alt="${currentNumber}" style="width: 100px; height: 100px;" onclick="handleImageClick(this, ${currentNumber})">`;
+      numberDiv.innerHTML = initialImage; // Display current number image
+      displayNumberButtons();
+    }
+
+    // Start the game on page load
+    window.onload = startGame;
+  </script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Animals</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-image: url('images/alpha_bg.png');
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      position: relative;
+    }
+
+    #back-arrow {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 50px;
+      color: black;
+      cursor: pointer;
+      z-index: 10;
+      text-decoration: none;
+    }
+
+    #back-arrow:hover {
+      color: white;
+    }
+
+    .interactive-item {
+      margin: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .interactive-item img {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 5px;
+      transition: transform 0.3s ease;
+    }
+
+    .interactive-item p {
+      font-size: 18px;
+      color: white;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    #animals-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 80%;
+      margin-top: 100px;
+    }
+
+    .top-row, .bottom-row {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .bottom-row {
+      margin-top: 50px;
+    }
+
+    .interactive-item.zoomed img {
+      transform: scale(1.5);
+    }
+      /* Style for Play button */
+    #play-button {
+      position: absolute;
+      bottom: 100px;
+      right: 50px;
+      background-color: #28a745;
+      color: white;
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    #play-button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <a href="choose.html" id="back-arrow">←</a>
+
+  <!-- Play button in bottom-right corner with href -->
+  <a href="animalgames.html">
+    <button id="play-button">Play</button>
+  </a>
+  <!-- Animals and images in top and bottom rows -->
+  <div id="animals-container">
+    <div class="top-row">
+      <div class="interactive-item" onclick="playAnimalSound('cat', this)">
+        <img src="images/cat.png" alt="Cat" />
+        <p>Cat</p>
+      </div>
+      <div class="interactive-item" onclick="playAnimalSound('dog', this)">
+        <img src="images/dog.png" alt="Dog" />
+        <p>Dog</p>
+      </div>
+      <div class="interactive-item" onclick="playAnimalSound('cow', this)">
+        <img src="images/cow.png" alt="Cow" />
+        <p>Cow</p>
+      </div>
+      <div class="interactive-item" onclick="playAnimalSound('lion', this)">
+        <img src="images/lion.png" alt="Lion" />
+        <p>Lion</p>
+      </div>
+      <div class="interactive-item" onclick="playAnimalSound('elephant', this)">
+        <img src="images/elephant.png" alt="Elephant" />
+        <p>Elephant</p>
+      </div>
+    </div>
+
+    <div class="bottom-row">
+      <div class="interactive-item" onclick="playAnimalSound('sheep', this)">
+        <img src="images/sheep.png" alt="Sheep" />
+        <p>Sheep</p>
+      </div>
+      <div class="interactive-item" onclick="playAnimalSound('horse', this)">
+        <img src="images/horse.png" alt="Horse" />
+        <p>Horse</p>
+      </div>
+      <div class="interactive-item" onclick="playAnimalSound('duck', this)">
+        <img src="images/duck.png" alt="Duck" />
+        <p>Duck</p>
+      </div>
+      <div class="interactive-item" onclick="playAnimalSound('frog', this)">
+        <img src="images/frog.png" alt="Frog" />
+        <p>Frog</p>
+      </div>
+      <div class="interactive-item" onclick="playAnimalSound('bird', this)">
+        <img src="images/bird.png" alt="Bird" />
+        <p>Bird</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function playAnimalSound(animal, element) {
+      const audio = new Audio(`sounds/${animal}.mp3`);
+      audio.play();
+
+      // Zoom effect: Add "zoomed" class
+      element.classList.toggle('zoomed');
+
+      // Remove zoom after 1 second to make the zoom effect revert
+      setTimeout(() => {
+        element.classList.remove('zoomed');
+      }, 200);
+    }
+  </script>
+  <script src="scripts.js"></script>
+</body>
+</html>
